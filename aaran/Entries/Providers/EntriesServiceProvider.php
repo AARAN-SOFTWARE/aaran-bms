@@ -2,9 +2,12 @@
 
 namespace Aaran\Entries\Providers;
 
+use Aaran\Entries\Controllers\Sales\SalesInvoiceController;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
+
 use Aaran\Entries\Livewire\Sales;
+use Aaran\Entries\Livewire\Purchase;
 
 
 class EntriesServiceProvider extends ServiceProvider
@@ -26,6 +29,11 @@ class EntriesServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(EntriesRouteServiceProvider::class);
+
+        $this->app->bind(SalesInvoiceController::class, function ($app) {
+            return new SalesInvoiceController();
+        });
+
         $this->loadConfigs();
         $this->loadViews();
     }
@@ -37,6 +45,8 @@ class EntriesServiceProvider extends ServiceProvider
         Livewire::component('sales.index', Sales\Index::class);
         Livewire::component('sales.upsert', Sales\Upsert::class);
 
+        Livewire::component('purchase.index', Purchase\Index::class);
+        Livewire::component('purchase.upsert', Purchase\Upsert::class);
 
     }
 

@@ -1,19 +1,18 @@
 <div>
-    <x-slot name="header">Sales</x-slot>
-    {{--    <x-forms.m-panel>--}}
+    <x-slot name="header">Purchase</x-slot>
+
     <x-aaran-ui::alerts.notification />
 
-    <div class="space-y-5 pt-10 min-h-[40rem]">
+    <div class="space-y-5 pt-10  min-h-[40rem]">
         <div class="space-y-5">
             <div class="max-w-6xl mx-auto">
                 <x-aaran-ui::tabs.tab-panel>
                     <x-slot name="tabs">
                         <x-aaran-ui::tabs.tab>Details</x-aaran-ui::tabs.tab>
-                        <x-aaran-ui::tabs.tab>Address</x-aaran-ui::tabs.tab>
-                        <x-aaran-ui::tabs.tab>E-way Bill Details</x-aaran-ui::tabs.tab>
-                        <x-aaran-ui::tabs.tab>Destination</x-aaran-ui::tabs.tab>
+                        <x-aaran-ui::tabs.tab>Others</x-aaran-ui::tabs.tab>
                         <x-aaran-ui::tabs.tab>Additional Charges</x-aaran-ui::tabs.tab>
                         <x-aaran-ui::tabs.tab>Terms</x-aaran-ui::tabs.tab>
+
                     </x-slot>
                     <x-slot name="content">
                         <x-aaran-ui::tabs.content>
@@ -40,7 +39,7 @@
                                                                     {{ $contact->vname }}
                                                                 </x-aaran-ui::dropdown.option>
                                                             @empty
-                                                                @livewire('aaran.master.contact.lookup.contact-model', [$contact_name])
+                                                                @livewire('aaran.master.contact.lookup.contact-model',[$contact_name])
                                                             @endforelse
                                                         @endif
                                                     </x-aaran-ui::dropdown.select>
@@ -49,7 +48,6 @@
                                             @error('contact_name')
                                             <span class="text-red-400">{{$message}}</span>@enderror
                                         </div>
-
                                         <div class="h-16 ">
                                             @if(\Aaran\Assets\Features\SaleEntry::hasOrder())
                                                 <x-aaran-ui::dropdown.wrapper label="Order NO" type="orderTyped">
@@ -80,50 +78,64 @@
                                             @endif
                                         </div>
                                         <div class="h-16 ">
-                                            @if(\Aaran\Assets\Features\SaleEntry::hasStyle())
-
-                                                <x-aaran-ui::dropdown.wrapper label="Style" type="style_name">
-                                                    <div class="relative ">
-
-                                                        <x-aaran-ui::dropdown.input label="Style" id="style_name"
-                                                                          wire:model.live="style_name"
-                                                                          wire:keydown.arrow-up="decrementStyle"
-                                                                          wire:keydown.arrow-down="incrementStyle"
-                                                                          wire:keydown.enter="enterStyle"/>
-                                                        <x-aaran-ui::dropdown.select>
-
-                                                            @if($styleCollection)
-                                                                @forelse ($styleCollection as $i => $style)
-                                                                    <x-aaran-ui::dropdown.option
-                                                                        highlight="{{$highlightStyle === $i  }}"
-                                                                        wire:click.prevent="setStyle('{{$style->vname}}','{{$style->id}}')">
-                                                                        {{ $style->vname }}
-                                                                    </x-aaran-ui::dropdown.option>
-                                                                @empty
-                                                                    @livewire('aaran.master.style.lookup.style-model',[$style_name])
-                                                                @endforelse
-                                                            @endif
-                                                        </x-aaran-ui::dropdown.select>
-
-                                                    </div>
-                                                </x-aaran-ui::dropdown.wrapper>
-                                            @endif
+                                            <x-aaran-ui::input.floating wire:model="purchase_no" label="Purchase No"/>
                                         </div>
+                                        {{--                                        <div class="h-16 ">--}}
+                                        {{--                                            @if(\Aaran\Aadmin\Src\SaleEntry::hasStyle())--}}
+
+                                        {{--                                                <x-dropdown.wrapper label="Style" type="style_name">--}}
+                                        {{--                                                    <div class="relative ">--}}
+
+                                        {{--                                                        <x-dropdown.input label="Style" id="style_name"--}}
+                                        {{--                                                                          wire:model.live="style_name"--}}
+                                        {{--                                                                          wire:keydown.arrow-up="decrementStyle"--}}
+                                        {{--                                                                          wire:keydown.arrow-down="incrementStyle"--}}
+                                        {{--                                                                          wire:keydown.enter="enterStyle"/>--}}
+                                        {{--                                                        <x-dropdown.select>--}}
+
+                                        {{--                                                            @if($styleCollection)--}}
+                                        {{--                                                                @forelse ($styleCollection as $i => $style)--}}
+                                        {{--                                                                    <x-dropdown.option--}}
+                                        {{--                                                                        highlight="{{$highlightStyle === $i  }}"--}}
+                                        {{--                                                                        wire:click.prevent="setStyle('{{$style->vname}}','{{$style->id}}')">--}}
+                                        {{--                                                                        {{ $style->vname }}--}}
+                                        {{--                                                                    </x-dropdown.option>--}}
+                                        {{--                                                                @empty--}}
+                                        {{--                                                                    @livewire('controls.model.style-model',[$style_name])--}}
+                                        {{--                                                                @endforelse--}}
+                                        {{--                                                            @endif--}}
+                                        {{--                                                        </x-dropdown.select>--}}
+
+                                        {{--                                                    </div>--}}
+                                        {{--                                                </x-dropdown.wrapper>--}}
+                                        {{--                                            @endif--}}
+
+                                        {{--                                        </div>--}}
+
+
                                     </div>
                                     <div class="w-full space-y-3 ">
                                         <div class="h-16 ">
-                                            <x-aaran-ui::input.floating wire:model="invoice_no" label="Invoice No"/>
+                                            <x-aaran-ui::input.floating wire:model="entry_no" label="Entry No"/>
                                         </div>
                                         <div class="h-16 ">
-                                            <x-aaran-ui::input.model-date wire:model="invoice_date" label="Invoice Date"/>
+                                            <x-aaran-ui::input.model-date wire:model="purchase_date" label="Purchase Date"/>
+                                        </div>
+                                        <div class="h-16 ">
+                                            <x-aaran-ui::input.model-select wire:model="sales_type" :label="'Sales Type'">
+                                                <option class="text-gray-400"> choose ..</option>
+                                                <option value="1">CGST-SGST</option>
+                                                <option value="2">IGST</option>
+                                            </x-aaran-ui::input.model-select>
                                         </div>
                                         <div class=" ">
                                             @if(\Aaran\Assets\Features\SaleEntry::hasJob_no())
                                                 <x-aaran-ui::input.floating wire:model="job_no" label="Job No"/>
                                             @endif
                                         </div>
+
                                         <div class="">
-{{--                                            @if(\Aaran\Assets\Features\SaleEntry::hasDespatch())--}}
+                                            @if(\Aaran\Assets\Features\SaleEntry::hasDespatch())
                                                 <x-aaran-ui::dropdown.wrapper label="Despatch No" type="despatchTyped">
                                                     <div class="relative ">
                                                         <x-aaran-ui::dropdown.input
@@ -144,7 +156,7 @@
                                                                     </x-aaran-ui::dropdown.option>
                                                                 @empty
                                                                     <button
-                                                                        wire:click.prevent="despatchSave('{{$despatch_name}}')"
+                                                                        wire:click.prevent="despatchSave('{{$dispatch_name}}')"
                                                                         class="text-white bg-green-500 text-center w-full">
                                                                         create
                                                                     </button>
@@ -153,46 +165,49 @@
                                                         </x-aaran-ui::dropdown.select>
                                                     </div>
                                                 </x-aaran-ui::dropdown.wrapper>
-{{--                                            @endif--}}
+                                            @endif
                                         </div>
-                                        <div class="h-16 ">
-                                            <x-aaran-ui::input.model-select wire:model="sales_type" :label="'Sales Type'">
-                                                <option class="text-gray-400"> choose ..</option>
-                                                <option value="1">CGST-SGST</option>
-                                                <option value="2">IGST</option>
-                                            </x-aaran-ui::input.model-select>
-                                        </div>
+
                                     </div>
+
                                 </div>
+
                                 <div
                                     class="px-4 pb-4  text-lg font-merri tracking-wider text-orange-600 underline underline-offset-4 underline-orange-500">
-                                    Sales Items
+                                    Purchase Items
                                 </div>
                                 <div class="w-full flex  gap-x-1 pb-4">
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasPo_no())
-                                        <div class="">
+                                        @if(\Aaran\Assets\Features\SaleEntry::hasPo_no())
+                                    <div class="">
                                             <x-aaran-ui::input.floating id="qty" wire:model.live="po_no" label="Po No"/>
-                                        </div>
-                                    @endif
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasDc_no())
-                                        <div class="">
+                                    </div>
+                                        @endif
+
+                                        @if(\Aaran\Assets\Features\SaleEntry::hasDc_no())
+                                    <div class="">
                                             <x-aaran-ui::input.floating id="dc" wire:model.live="dc_no" label="DC No."/>
-                                        </div>
-                                    @endif
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasNo_of_roll())
-                                        <div class="">
+                                    </div>
+                                        @endif
+                                        @if(\Aaran\Assets\Features\SaleEntry::hasNo_of_roll())
+                                    <div class="">
                                             <x-aaran-ui::input.floating id="no_of_roll" wire:model.live="no_of_roll"
                                                               label="No of Roll"/>
-                                        </div>
-                                    @endif
+                                    </div>
+                                        @endif
                                     <div class="w-[30%]">
-                                        <x-aaran-ui::dropdown.wrapper label="Particulars" type="productTyped">
+                                        <x-aaran-ui::dropdown.wrapper label="Product Name" type="productTyped">
                                             <div class="relative ">
                                                 <x-aaran-ui::dropdown.input label="Product Name" id="product_name"
                                                                   wire:model.live="product_name"
                                                                   wire:keydown.arrow-up="decrementProduct"
                                                                   wire:keydown.arrow-down="incrementProduct"
                                                                   wire:keydown.enter="enterProduct"/>
+                                                @error('product_id')
+
+                                                <span class="text-red-500">{{'The Product Name is Required.'}}</span>
+
+                                                @enderror
+
                                                 <x-aaran-ui::dropdown.select>
                                                     @if($productCollection)
                                                         @forelse ($productCollection as $i => $product)
@@ -203,7 +218,6 @@
 {{--                                                                &nbsp;{{\Aaran\Entries\Models\Sale::commons($product->gstpercent_id)}}--}}
                                                                 %
                                                             </x-aaran-ui::dropdown.option>
-
                                                         @empty
                                                             @livewire('aaran.master.product.lookup.product-model',[$product_name])
                                                         @endforelse
@@ -212,15 +226,14 @@
                                             </div>
                                         </x-aaran-ui::dropdown.wrapper>
                                     </div>
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasProductDescription())
-                                        <div class="w-[20%]">
+                                        @if(\Aaran\Assets\Features\SaleEntry::hasProductDescription())
+                                    <div class="w-[20%]">
                                             <x-aaran-ui::input.floating id="qty" wire:model.live="description"
                                                               label="description"/>
-                                        </div>
-                                    @endif
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasColour())
-                                        <div class="w-[15%]">
-
+                                    </div>
+                                        @endif
+                                        @if(\Aaran\Assets\Features\SaleEntry::hasColour())
+                                    <div class="w-[15%]">
                                             <x-aaran-ui::dropdown.wrapper label="Colour Name" type="colourTyped">
                                                 <div class="relative ">
                                                     <x-aaran-ui::dropdown.input label="Colour Name" id="colour_name"
@@ -244,13 +257,13 @@
                                                         @endif
                                                         {{--                                <x-dropdown.option2  wire:click.prevent="colourSave('{{$colour_name}}')" label="Colour" />--}}
 
-                                                    </x-aaran-ui::aaran-ui::dropdown.select>
+                                                    </x-aaran-ui::dropdown.select>
                                                 </div>
                                             </x-aaran-ui::dropdown.wrapper>
-                                        </div>
-                                    @endif
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasSize())
-                                        <div class="w-[15%]">
+                                    </div>
+                                        @endif
+                                        @if(\Aaran\Assets\Features\SaleEntry::hasSize())
+                                    <div class="w-[15%]">
                                             <x-aaran-ui::dropdown.wrapper label="Size Name" type="sizeTyped">
                                                 <div class="relative ">
                                                     <x-aaran-ui::dropdown.input label="Size Name" id="size_name"
@@ -280,8 +293,8 @@
                                                     </x-aaran-ui::dropdown.select>
                                                 </div>
                                             </x-aaran-ui::dropdown.wrapper>
-                                        </div>
-                                    @endif
+                                    </div>
+                                        @endif
                                     <div class="w-[10%]">
                                         <x-aaran-ui::input.floating id="qty" wire:model.live="qty" label="Quantity"/>
                                     </div>
@@ -289,6 +302,7 @@
                                         <x-aaran-ui::input.floating id="price" wire:model.live="price" label="Price"/>
                                     </div>
                                     <x-aaran-ui::button.add wire:click="addItems"/>
+
                                 </div>
                                 <div class="max-w-6xl mx-auto">
                                     <div class="w-full border rounded-lg overflow-hidden">
@@ -324,20 +338,19 @@
                                                     <tr class="text-center border-b font-lex tracking-wider hover:bg-amber-50">
                                                         <td class="py-2 border-r"
                                                             wire:click.prevent="changeItems({{$index}})">{{$index+1}}</td>
-                                                        @if(\Aaran\Assets\Features\SaleEntry::hasPo_no())
-                                                            <td class="py-2 border-r"
-                                                                wire:click.prevent="changeItems({{$index}})">{{$row['po_no']}}</td>
-                                                        @endif
-                                                        @if(\Aaran\Assets\Features\SaleEntry::hasDc_no())
-                                                            <td class="py-2 border-r"
-                                                                wire:click.prevent="changeItems({{$index}})">{{$row['dc_no']}}</td>
-                                                        @endif
+{{--                                                        @if(\Aaran\Aadmin\Src\SaleEntry::hasPo_no())--}}
+{{--                                                            <td class="py-2 border-r"--}}
+{{--                                                                wire:click.prevent="changeItems({{$index}})">{{$row['po_no']}}</td>--}}
+{{--                                                        @endif--}}
+{{--                                                        @if(\Aaran\Aadmin\Src\SaleEntry::hasDc_no())--}}
+{{--                                                            <td class="py-2 border-r"--}}
+{{--                                                                wire:click.prevent="changeItems({{$index}})">{{$row['dc_no']}}</td>--}}
+{{--                                                        @endif--}}
                                                         @if(\Aaran\Assets\Features\SaleEntry::hasNo_of_roll())
                                                             <td class="py-2 border-r"
                                                                 wire:click.prevent="changeItems({{$index}})">{{$row['no_of_roll']}}</td>
                                                         @endif
-
-                                                        <td class="py-2 border-r text-left px-2"
+                                                        <td class="py-2 border-r"
                                                             wire:click.prevent="changeItems({{$index}})">
                                                             <div class="line-clamp-1">{{$row['product_name']}}
                                                                 @if($row['description'])
@@ -396,21 +409,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="max-w-6xl mx-auto flex justify-between items-start gap-5 py-10">
-                                <div class="w-2/3">
-                                    @if(isset($e_invoiceDetails->id))
-                                        <div class="sm:w-full w-[300px] flex flex-col items-center justify-center ">
-                                            <img class="w-[200px]"
-{{--                                                 src="{{\App\Helper\qrcoder::generate($e_invoiceDetails->signed_qrcode,22)}}"--}}
-                                                 alt="{{$e_invoiceDetails->signed_qrcode}}">
-                                            <div class="sm:w-full w-[300px]">Irn No : {{$e_invoiceDetails->irn}}</div>
-                                            @if(isset($e_wayDetails))
-                                                <div class="sm:w-full w-[300px] ">E-way Bill
-                                                    NO: {{$e_wayDetails->ewbno}}</div>
-                                            @endif
-                                        </div>
-                                    @endif
-                                </div>
+                            <div class="max-w-6xl mx-auto flex justify-end items-start gap-5">
+
                                 <div class="w-1/3 flex text-xs text-400 px-4">
                                     <div class="w-2/4 space-y-4 text-gray-400 font-merri tracking-wider">
                                         <div>Taxable No</div>
@@ -432,145 +432,46 @@
                                     </div>
                                 </div>
                             </div>
-                        </x-aaran-ui::tabs.content>
-                        <x-aaran-ui::tabs.content>
-                            <div class="w-1/2 space-y-8 h-52 pt-3">
-                                <div>
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasBillingAddress())
-                                        <x-aaran-ui::dropdown.wrapper label="Billing Address" type="orderTyped">
-                                            <div class="relative ">
-                                                <x-aaran-ui::dropdown.input label="Billing Address" id="billing_address"
-                                                                  wire:model.live="billing_address"
-                                                                  wire:keydown.arrow-up="decrementBilling_address"
-                                                                  wire:keydown.arrow-down="incrementBilling_address"
-                                                                  wire:keydown.enter="enterBilling_address"/>
-                                                <x-aaran-ui::dropdown.select>
-                                                    @if($billing_addressCollection)
-                                                        @forelse ($billing_addressCollection as $i => $billing_address)
-                                                            <x-aaran-ui::dropdown.option
-                                                                highlight="{{$highlightBilling_address === $i  }}"
-                                                                wire:click.prevent="setBilling_address('{{$billing_address->address_type.'-'.$billing_address->address_1}}','{{$billing_address->id}}')">
-                                                                {{ $billing_address->address_type }}&nbsp;-&nbsp;
-                                                                {{ $billing_address->address_1 }}&nbsp;-&nbsp;
-                                                                {{ $billing_address->address_2 }}&nbsp;-&nbsp;
-                                                                {{ $billing_address->gstin }}
-                                                            </x-aaran-ui::dropdown.option>
-                                                        @empty
-                                                            <x-aaran-ui::dropdown.new
-                                                                href="{{route('contacts.upsert',[0])}}"
-                                                                label="Billing Address"/>
-                                                        @endforelse
-                                                    @endif
-                                                </x-aaran-ui::dropdown.select>
-                                            </div>
-                                        </x-aaran-ui::dropdown.wrapper>
-                                    @endif
-                                </div>
-                                <div>
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasShippingAddress())
-                                        <x-aaran-ui::dropdown.wrapper label="Shipping Address" type="shipping_addressTyped">
-                                            <div class="relative ">
-                                                <x-aaran-ui::dropdown.input label="Shipping Address" id="shipping_address"
-                                                                  wire:model.live="shipping_address"
-                                                                  wire:keydown.arrow-up="decrementShipping_address"
-                                                                  wire:keydown.arrow-down="incrementShipping_address"
-                                                                  wire:keydown.enter="enterShipping_address"/>
-                                                <x-aaran-ui::dropdown.select>
-                                                    @if($shipping_addressCollection)
-                                                        @forelse ($shipping_addressCollection as $i => $shipping_address)
-                                                            <x-aaran-ui::dropdown.option
-                                                                highlight="{{$highlightShipping_address === $i  }}"
-                                                                wire:click.prevent="setShipping_address('{{ $shipping_address->address_type.'-'. $shipping_address->address_1}}','{{$shipping_address->id}}')">
-                                                                {{ $shipping_address->address_type }}&nbsp;-&nbsp;
-                                                                {{ $shipping_address->address_1 }}&nbsp;-&nbsp;
-                                                                {{ $shipping_address->address_2 }}&nbsp;-&nbsp;
-                                                                {{ $shipping_address->gstin }}
-                                                            </x-aaran-ui::dropdown.option>
-                                                        @empty
-                                                            <x-aaran-ui::dropdown.new
-                                                                href="{{route('contacts.upsert',[0])}}"
-                                                                label="Shipping Address"/>
-                                                        @endforelse
-                                                    @endif
-                                                </x-aaran-ui::dropdown.select>
-                                            </div>
-                                        </x-aaran-ui::dropdown.wrapper>
-                                    @endif
-                                </div>
-{{--                          <div>{{$billing_address->address_1, $billing_address->address_2}}</div>--}}
 
-                            </div>
-                        </x-aaran-ui::tabs.content>
-                        <x-aaran-ui::tabs.content>
-                            <div class="flex justify-between gap-5 h-56 pt-3">
-                                <div class="w-full space-y-8 ">
-                                    @if(\Aaran\Assets\Features\SaleEntry::hasTransport())
-                                        <x-aaran-ui::dropdown.wrapper label="Transport" type="transportTyped">
-                                            <div class="relative ">
-                                                <x-aaran-ui::dropdown.input label="Transport" id="transport_name"
-                                                                  wire:model.live="transport_name"
-                                                                  wire:keydown.arrow-up="decrementTransport"
-                                                                  wire:keydown.arrow-down="incrementTransport"
-                                                                  wire:keydown.enter="enterTransport"/>
-                                                @error('transport_id')
-                                                <span class="text-red-500">{{'The Transport is Required.'}}</span>
-                                                @enderror
-                                                <x-aaran-ui::dropdown.select>
-                                                    @if($transportCollection)
-                                                        @forelse ($transportCollection as $i => $transport)
-                                                            <x-aaran-ui::dropdown.option
-                                                                highlight="{{$highlightTransport === $i  }}"
-                                                                wire:click.prevent="setTransport('{{$transport->vname}}','{{$transport->id}}')">
-                                                                {{ $transport->vname. '|'. $transport->desc.'|' .$transport->desc_1 }}
-                                                            </x-aaran-ui::dropdown.option>
-                                                        @empty
-                                                            <x-aaran-ui::dropdown.new
-                                                                wire:click.prevent="transportSave('{{$transport_name}}')"
-                                                                label="Transport"/>
-                                                        @endforelse
-                                                    @endif
-                                                </x-aaran-ui::dropdown.select>
-                                                @error('transport_name')
-                                                <span class="text-red-400">{{$message}}</span>@enderror
-                                            </div>
-                                        </x-aaran-ui::dropdown.wrapper>
-                                    @endif
-                                    <x-aaran-ui::input.model-date wire:model="TransdocDt" label="Transport Date"/>
-                                    <x-aaran-ui::input.model-select wire:model="TransMode" label="Transport Mode">
-                                        <option value="">Choose..</option>
-                                        <option value="1">Road</option>
-                                        <option value="2">Rail</option>
-                                        <option value="3">Air</option>
-                                        <option value="4">ship</option>
-                                    </x-aaran-ui::input.model-select>
-                                </div>
-                                <div class="w-full space-y-8">
-                                    <div>
-                                        <x-aaran-ui::input.floating wire:model.live="distance" label="Distance"/>
-                                        @error('distance')
-                                        <span class="text-red-400">{{$message}}</span>@enderror
-                                    </div>
-                                    <div>
-                                        <x-aaran-ui::input.floating wire:model.live="Vehno" label="Vechile No"/>
-                                        @error('Vehno')
-                                        <span class="text-red-400">{{$message}}</span>@enderror
-                                    </div>
-                                    <x-aaran-ui::input.model-select wire:model="Vehtype" label="Vechile Type">
-                                        <option value="">Choose..</option>
-                                        <option value="R">Regular</option>
-                                        <option value="O">ODC</option>
-                                    </x-aaran-ui::input.model-select>
-
-                                </div>
-                            </div>
                         </x-aaran-ui::tabs.content>
                         <x-aaran-ui::tabs.content>
                             <div class="w-1/2 space-y-8 gap-5 h-52 pt-3">
 
+                                @if(\Aaran\Assets\Features\SaleEntry::hasTransport())
+                                    <x-aaran-ui::dropdown.wrapper label="Transport" type="transportTyped">
+                                        <div class="relative ">
+                                            <x-aaran-ui::dropdown.input label="Transport" id="transport_name"
+                                                              wire:model.live="transport_name"
+                                                              wire:keydown.arrow-up="decrementTransport"
+                                                              wire:keydown.arrow-down="incrementTransport"
+                                                              wire:keydown.enter="enterTransport"/>
+                                            @error('transport_id')
+                                            <span class="text-red-500">{{'The Transport is Required.'}}</span>
+                                            @enderror
+                                            <x-aaran-ui::dropdown.select>
+                                                @if($transportCollection)
+                                                    @forelse ($transportCollection as $i => $transport)
+                                                        <x-aaran-ui::dropdown.option
+                                                            highlight="{{$highlightTransport === $i  }}"
+                                                            wire:click.prevent="setTransport('{{$transport->vname}}','{{$transport->id}}')">
+{{--                                                            {{ $transport->vname }}--}}
+                                                            {{ $transport->vname. '|'. $transport->desc.'|' .$transport->desc_1 }}
+                                                        </x-aaran-ui::dropdown.option>
+                                                    @empty
+                                                        <x-aaran-ui::dropdown.new
+                                                            wire:click.prevent="transportSave('{{$transport_name}}')"
+                                                            label="Transport"/>
+                                                    @endforelse
+                                                @endif
+                                            </x-aaran-ui::dropdown.select>
+                                        </div>
+                                    </x-aaran-ui::dropdown.wrapper>
+                                @endif
 
                                 @if(\Aaran\Assets\Features\SaleEntry::hasDestination())
                                     <x-aaran-ui::input.floating wire:model="destination" label="Destination"/>
                                 @endif
+
                                 @if(\Aaran\Assets\Features\SaleEntry::hasBundle())
                                     <x-aaran-ui::input.floating wire:model="bundle" label="Bundle"/>
                                 @endif
@@ -612,6 +513,7 @@
                                                       text-gray-900 bg-transparent rounded-lg border-1
                                                        border-gray-300 appearance-none
                                                        focus:outline-none focus:ring-2 focus:ring-cyan-50 focus:border-blue-600 peer"/>
+
                             </div>
                         </x-aaran-ui::tabs.content>
                         <x-aaran-ui::tabs.content>
@@ -628,39 +530,43 @@
 
     </div>
     <!-- Display Items ----------------------------------------------------------------------------------------------->
-
-    {{--    </x-forms.m-panel>--}}
-{{--    <div class="max-w-6xl mx-auto">--}}
+{{--    <div class="max-w-6xl mx-auto ">--}}
 {{--        @if( $common->vid != "")--}}
-            <x-aaran-ui::forms.m-panel-bottom-button routes="{{ route('sales.print', [$this->common->vid])}}" save back print/>
+            <x-aaran-ui::forms.m-panel-bottom-button
+                routes="{{ route('purchases.print', [$this->common->vid])}}"
+                save back
+                                           print/>
 {{--        @else--}}
 {{--            <x-aaran-ui::forms.m-panel-bottom-button save back/>--}}
 {{--        @endif--}}
 {{--    </div>--}}
-
-{{--    <div class="max-w-6xl px-10 mx-auto py-16 space-y-4">--}}
-{{--        @if(!$salesLogs->isEmpty())--}}
+{{--    --}}{{--    </x-forms.m-panel>--}}
+{{--    <div class="max-w-6xl mx-auto px-10 py-16 space-y-4">--}}
+{{--        @if(!$purchaseLogs->isEmpty())--}}
 {{--            <div class="text-xs text-orange-600  font-merri underline underline-offset-4">Activity</div>--}}
 {{--        @endif--}}
-{{--        @foreach($salesLogs as $row)--}}
+{{--        @foreach($purchaseLogs as $row)--}}
 {{--            <div class="px-6">--}}
-{{--                <div class="relative ">--}}
-{{--                    <div class=" border-l-[3px] border-dotted px-8 text-[10px]  tracking-wider py-3">--}}
-{{--                        <div class="flex gap-x-5 ">--}}
-{{--                            <div class="inline-flex text-gray-500 items-center font-sans font-semibold">--}}
-{{--                                <span>Invoice No:</span> <span>{{$row->vname}}</span></div>--}}
-{{--                            <div class="inline-flex  items-center space-x-1 font-merri"><span--}}
-{{--                                    class="text-blue-600">@</span><span--}}
-{{--                                    class="text-gray-500">{{$row->user->name}}</span>--}}
-{{--                            </div>--}}
+{{--            <div class="relative ">--}}
+{{--                <div class=" border-l-[3px] border-dotted px-8 text-[10px]  tracking-wider py-3">--}}
+{{--                    <div class="flex gap-x-5 ">--}}
+{{--                        <div class="inline-flex text-gray-500 items-center font-sans font-semibold">--}}
+{{--                            <span>Purchase No:</span> <span>{{$row->vname}}</span></div>--}}
+{{--                        <div class="inline-flex  items-center space-x-1 font-merri"><span--}}
+{{--                                class="text-blue-600">@</span><span class="text-gray-500">{{$row->user->name}}</span>--}}
 {{--                        </div>--}}
-{{--                        <div--}}
-{{--                            class="text-gray-400 text-[8px] font-semibold">{{date('M d, Y', strtotime($row->created_at))}}</div>--}}
-{{--                        <div class="pb-2 font-lex leading-5 py-2 text-justify">{!! $row->description !!}</div>--}}
 {{--                    </div>--}}
-{{--                    <div class="absolute top-0 -left-1 h-2.5 w-2.5  rounded-full bg-teal-600 "></div>--}}
+{{--                    <div--}}
+{{--                        class="text-gray-400 text-[8px] font-semibold">{{date('M d, Y', strtotime($row->created_at))}}</div>--}}
+{{--                    <div class="pb-2 font-lex leading-5 py-2 text-justify">{!! $row->description !!}</div>--}}
 {{--                </div>--}}
+{{--                <div class="absolute top-0 -left-1 h-2.5 w-2.5  rounded-full bg-teal-600 "></div>--}}
+{{--            </div>--}}
 {{--            </div>--}}
 {{--        @endforeach--}}
 {{--    </div>--}}
 </div>
+
+
+
+
