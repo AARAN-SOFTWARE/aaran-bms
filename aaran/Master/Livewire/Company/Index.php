@@ -58,7 +58,7 @@ class Index extends Component
     {
         return [
             'common.vname' => 'required|unique:companies,vname',
-            'gstin' => 'required|unique:companies,gstin',
+            'gstin' => 'unique:companies,gstin',
             'address_1' => 'required',
             'address_2' => 'required',
             'city_name' => 'required',
@@ -662,7 +662,8 @@ class Index extends Component
 //        $this->log = Logbook::where('vname', 'Company')->take(5)->get();
         return view('master::Company.index')->with([
             'list' => $this->getListForm->getList(Company::class, function ($query) {
-                return $query->where('tenant_id', session()->get('tenant_id'));
+                return $query;
+//                    ->where('tenant_id', session()->get('tenant_id'));
             }),
         ]);
     }

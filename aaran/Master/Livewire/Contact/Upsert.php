@@ -55,7 +55,8 @@ class Upsert extends Component
     {
         return [
             'vname' => 'required|unique:contacts,vname',
-            'gstin' => 'required|unique:contacts,gstin',
+            'mobile' => 'required',
+            'gstin' => 'unique:contacts,gstin',
             'itemList.0.address_1' => 'required',
             'itemList.0.address_2' => 'required',
             'itemList.0.city_name' => 'required',
@@ -628,13 +629,11 @@ class Upsert extends Component
     #region[Save]
     public function save(): void
     {
+        $this->validate($this->rules());
         $company_id = Company::value('id');
 
         if (!empty($this->vname)) {
             if (empty($this->vid)) {
-                // Validation
-                $this->validate($this->rules());
-
                 $contactTypeId = !empty($this->contact_type_id) ? $this->contact_type_id : ContactType::value('id') ?? 124;
 
                 // Creating new contact
@@ -823,7 +822,9 @@ class Upsert extends Component
                 });
 
             $this->itemList = $data->toArray();
-            $this->secondaryAddress = range(1, max(0, count($data) - 1));
+            for ($j = 0; $j < $data->skip(1)->count(); $j++) {
+                $this->secondaryAddress[] = $j + 1;
+            }
         } else {
             $this->effective_from = Carbon::now()->format('Y-m-d');
             $this->active_id = true;
@@ -846,30 +847,17 @@ class Upsert extends Component
     }
     #endregion
 
-
     #region[removeItems]
     public function removeItems($index): void
     {
-        // Check if the index exists before accessing
-        if (!isset($this->itemList[$index])) {
-            return;
-        }
-
         $items = $this->itemList[$index];
-
         unset($this->itemList[$index]);
-
-        if (!empty($items['contact_detail_id']) && $items['contact_detail_id'] != 0) {
+        if ($items['contact_detail_id'] != 0) {
             $obj = ContactDetail::find($items['contact_detail_id']);
-            if ($obj) {
-                $obj->delete();
-            }
+            $obj->delete();
         }
-
-        $this->itemList = array_values($this->itemList);
     }
     #endregion
-
 
     #region[Route]
     public function getRoute(): void
